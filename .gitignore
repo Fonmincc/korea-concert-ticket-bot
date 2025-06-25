@@ -1,0 +1,9 @@
+# 忽略含敏感資訊的檔案
+env.js
+
+# 忽略 node 套件
+node_modules/
+
+# 忽略 log / 系統暫存
+*.log
+.DS_Store

@@ -1,3 +1,23 @@
+import { TELEGRAM_CONFIG } from './env.js';
+
+function startKeepAlive() {
+    const interval = 5 * 60 * 1000; // 5 分鐘
+
+    setInterval(() => {
+        const msg = "⏰ 搶票機器人仍在運行中（每5分鐘狀態通知）";
+
+        fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CONFIG.bot1.chat_id,
+                text: msg
+            })
+        }).then(() => console.log("✅ 定時通知已送出"))
+          .catch(err => console.error("❌ 定時通知失敗", err));
+    }, interval);
+}
+
 async function sleep(t) {
     return await new Promise(resolve => setTimeout(resolve, t));
 }
@@ -40,7 +60,7 @@ async function clickOnArea(area) {
     }
 }
 
-async function findSeat() {
+async function findSeatA() {
     let frame = theFrame();
     let canvas = frame.document.getElementById("ez_canvas");
     let seat = canvas.getElementsByTagName("rect");
@@ -61,6 +81,54 @@ async function findSeat() {
     }
     return false;
 }
+
+async function findSeat() {
+    let frame = theFrame();
+    let canvas = frame.document.getElementById("ez_canvas");
+    let seat = canvas.getElementsByTagName("rect");
+    console.log(seat);
+    await sleep(750);
+    
+    for (let i = 0; i < seat.length; i++) {
+        let fillColor = seat[i].getAttribute("fill");
+
+        if (fillColor !== "#DDDDDD" && fillColor !== "none") {
+            console.log("Rect with different fill color found:", seat[i]);
+
+            // 點擊座位與下一步
+            var clickEvent = new Event('click', { bubbles: true });
+            seat[i].dispatchEvent(clickEvent);
+            frame.document.getElementById("nextTicketSelection").click();
+
+            // ✅ 傳送 Telegram 通知
+            const msg = "🎉 成功點擊座位並進入下一步！";
+
+            // Bot 1
+            fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CONFIG.bot1.chat_id,
+                    text: msg
+                })
+            });
+
+            // Bot 2
+            fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.bot2.token}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CONFIG.bot2.chat_id,
+                    text: msg
+                })
+            });
+
+            return true;
+        }
+    }
+    return false;
+}
+
 
 async function checkCaptchaFinish() {
     if (document.getElementById("certification").style.display != "none") {
@@ -93,11 +161,21 @@ async function searchSeat(data) {
     await searchSeat(data);
 }
 
+async function waitFirstLoadA() {
+    let concertId = getConcertId();
+    let data = await get_stored_value(concertId);
+    await sleep(1000);
+    searchSeat(data);
+}
+
 async function waitFirstLoad() {
     let concertId = getConcertId();
     let data = await get_stored_value(concertId);
     await sleep(1000);
     searchSeat(data);
+
+    // ➕ 啟動定時通知
+    startKeepAlive();
 }
 
 
