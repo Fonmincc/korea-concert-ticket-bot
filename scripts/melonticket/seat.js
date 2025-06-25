@@ -32,7 +32,7 @@ async function clickOnArea(area) {
             section[i].parentElement.click();
             
             // ✅ 在這裡加入隨機 delay
-            const delay = 500 + Math.random() * 800; // 0.5 ~ 1.3 秒
+            const delay = 5000 + Math.random() * 1000; // 1.0 ~ 2.0 秒
             await sleep(delay);
 
             return;
