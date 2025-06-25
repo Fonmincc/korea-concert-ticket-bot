@@ -4,11 +4,12 @@ function startKeepAlive() {
     setInterval(() => {
         const msg = "⏰ 搶票機器人仍在運行中（每5分鐘狀態通知）";
 
-        fetch(`https://api.telegram.org/bot${window.TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
+        // Bot 1（6695953003）
+        fetch("https://api.telegram.org/bot7870489806:AAGTJVxWIvm2k0CfmGYDllKkucMmkxA4EBg/sendMessage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                chat_id: TELEGRAM_CONFIG.bot1.chat_id,
+                chat_id: "6695953003",
                 text: msg
             })
         }).then(() => console.log("✅ 定時通知已送出"))
@@ -101,22 +102,22 @@ async function findSeat() {
             // ✅ 傳送 Telegram 通知
             const msg = "🎉 成功點擊座位並進入下一步！";
 
-            // Bot 1
-            fetch(`https://api.telegram.org/bot${window.TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
+            // Bot 1（6695953003）
+            fetch("https://api.telegram.org/bot7870489806:AAGTJVxWIvm2k0CfmGYDllKkucMmkxA4EBg/sendMessage", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    chat_id: TELEGRAM_CONFIG.bot1.chat_id,
+                    chat_id: "6695953003",
                     text: msg
                 })
             });
 
-            // Bot 2
-            fetch(`https://api.telegram.org/bot${window.TELEGRAM_CONFIG.bot2.token}/sendMessage`, {
+            // Bot 2（8175762325）
+            fetch("https://api.telegram.org/bot7900227312:AAGbMijVZHYEnzx87p-GgLrj5iCqlsUOQLY/sendMessage", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    chat_id: TELEGRAM_CONFIG.bot2.chat_id,
+                    chat_id: "8175762325",
                     text: msg
                 })
             });
