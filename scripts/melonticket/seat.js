@@ -1,12 +1,10 @@
-import { TELEGRAM_CONFIG } from './env.js';
-
 function startKeepAlive() {
     const interval = 5 * 60 * 1000; // 5 分鐘
 
     setInterval(() => {
         const msg = "⏰ 搶票機器人仍在運行中（每5分鐘狀態通知）";
 
-        fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
+        fetch(`https://api.telegram.org/bot${window.TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -104,7 +102,7 @@ async function findSeat() {
             const msg = "🎉 成功點擊座位並進入下一步！";
 
             // Bot 1
-            fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
+            fetch(`https://api.telegram.org/bot${window.TELEGRAM_CONFIG.bot1.token}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -114,7 +112,7 @@ async function findSeat() {
             });
 
             // Bot 2
-            fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.bot2.token}/sendMessage`, {
+            fetch(`https://api.telegram.org/bot${window.TELEGRAM_CONFIG.bot2.token}/sendMessage`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
