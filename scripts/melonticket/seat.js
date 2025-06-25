@@ -23,13 +23,18 @@ function openEverySection() {
     }
 }
 
-function clickOnArea(area) {
+async function clickOnArea(area) {
     let frame = theFrame();
     let section = frame.document.getElementsByClassName("area_tit");
     for (let i = 0; i < section.length; i++) {
         let reg = new RegExp(area + "\$","g");
         if (section[i].innerHTML.match(reg)) {
             section[i].parentElement.click();
+            
+            // ✅ 在這裡加入隨機 delay
+            const delay = 500 + Math.random() * 800; // 0.5 ~ 1.3 秒
+            await sleep(delay);
+
             return;
         }
     }
@@ -78,7 +83,7 @@ async function reload() {
 async function searchSeat(data) {
     for (sec of data.section) {
         openEverySection();
-        clickOnArea(sec);
+        await clickOnArea(sec);
         if (await findSeat()) {
             checkCaptchaFinish();
             return;
